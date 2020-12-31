@@ -1,4 +1,4 @@
-#pragma once;
+#pragma once
 
 
 #include <type_traits>
@@ -18,7 +18,7 @@ namespace hansaduza {
         ~ThreadPool();
 
         template <typename F, typename... Args>
-        std::future<typename std::result_of<F(Args...)>::type> EnqueueJob(F, Args... args);
+        std::future<typename std::result_of<F(Args...)>::type> EnqueueJob(F&& f, Args... args);
 
         bool Stop();
         bool IsStop() const;

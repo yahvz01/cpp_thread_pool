@@ -33,9 +33,9 @@ ThreadPool::~ThreadPool() {
 
 // EnqueueTask
 template <typename F, typename... Args>
-std::future<typename std::result_of<F(Args...)>::type> EnqueueJob(F&& f, Args... args) {
+std::future<typename std::result_of<F(Args...)>::type> ThreadPool::EnqueueJob(F&& f, Args... args){
 
-    using return_type = std::result_of<F(Args...)>::type;
+    using return_type = typename std::result_of<F(Args...)>::type;
     std::packaged_task<return_type> task( std::bind(std::forward<F>(f), std::forward<Args>(args)...) );
     auto task_ptr = std::make_shared<std::packaged_task<return_type>>(task);
     std::future<return_type> task_ret_future = task.get_future();
@@ -47,8 +47,7 @@ std::future<typename std::result_of<F(Args...)>::type> EnqueueJob(F&& f, Args...
 
     con_var.notify_one();
 
-    return task_ret_future;
-    
+    return task_ret_future;    
 }
 
 // DequeueTask
